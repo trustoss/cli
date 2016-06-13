@@ -1,0 +1,47 @@
+{
+  "name": "trustoss",
+  "version": "0.0.1",
+  "description": "Scaffold / Lint essential files for compliance with TrustOSS specification. http://trustoss.org",
+  "main": "lib/trustoss.js",
+  "bin": {
+    "trustoss": "bin/cli"
+  },
+  "scripts": {
+    "test": "tap ./*.tap.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trustoss/trustoss-cli.git"
+  },
+  "keywords": [
+    "trust",
+    "spec",
+    "trustoss",
+    "specification",
+    "docs",
+    "doc",
+    "documentation",
+    "readme",
+    "changelog",
+    "contributing",
+    "code",
+    "of",
+    "conduct",
+    "c4sf",
+    "cfsf",
+    "code",
+    "for",
+    "san",
+    "francisco"
+  ],
+  "author": "Trent Oswald <trentoswald@therebelrobot.com> (@therebelrobot)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/trustoss/trustoss-cli/issues"
+  },
+  "homepage": "https://github.com/trustoss/trustoss-cli#readme",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "commander": "^2.9.0"
+  }
+}

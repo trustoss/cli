@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+
+// Set up default messages
+require('colors')
+
+const info = '[TrustOSS]'.green
+const warn = '[TrustOSS | WARNING]'.yellow
+const danger = '[TrustOSS | ERROR]'.red
+
+// Program bootstrap
+var program = require('commander')
+var pkg = require('../package.json')
+
+var subcommand
+
+program
+  .version(pkg.version)
+  .usage('[init | options]')
+  .usage('[options]')
+  .option('-p, --peppers', 'Add peppers')
+  .option('-P, --pineapple', 'Add pineapple')
+  .option('-b, --bbq-sauce', 'Add bbq sauce')
+  .option('-c, --cheese [type]', 'Add the specified type of cheese [marble]', 'marble')
+  .arguments('<cmd> [env]')
+  .action(function (subcmd) {
+    subcommand = subcmd
+  })
+  .parse(process.argv)
+
+if(subcommand){
+  if(subcommand==='init'){
+    bootstrapEssentialFiles()
+  } else {
+    console.log(danger, 'Unrecognized subcommand,', subcommand.yellow)
+    program.outputHelp(function(txt){
+      return txt.red
+    })
+  }
+} else {
+  triggerLint()
+}
+
+function bootstrapEssentialFiles(){
+  console.log(info, 'Bootstrapping TrustOSS essential files.')
+}
+function triggerLint(){
+  console.log(info, 'Linting for TrustOSS documents.')
+}
