@@ -7,6 +7,7 @@
     "trustoss": "bin/cli"
   },
   "scripts": {
+    "pretest": "standard",
     "test": "tap ./*.tap.js"
   },
   "repository": {
@@ -41,9 +42,16 @@
   },
   "homepage": "https://github.com/trustoss/trustoss-cli#readme",
   "dependencies": {
+    "breeze": "^1.2.2",
     "colors": "^1.1.2",
     "commander": "^2.9.0",
+    "mksubdir": "^0.1.0",
+    "moment": "^2.13.0",
     "prompt": "^1.0.0",
     "require-directory": "^2.1.1"
+  },
+  "devDependencies": {
+    "standard": "^7.1.2",
+    "tap": "^5.7.3"
   }
 }

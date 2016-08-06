@@ -2,10 +2,7 @@ module.exports = function readmeDbader (opts) {
   /*
     https://github.com/dbader/readme-template
     opts {
-      name: String,
-      changelogLocation: String,
-      cocLocation: String,
-      licenseLocation: String
+      name: String
     }
   */
   return `# ${opts.name}
