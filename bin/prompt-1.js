@@ -1,6 +1,6 @@
 module.exports = function (data) {
   var defaults = data.defaults
-  console.log(defaults)
+  // console.log(defaults)
   return {
     trustoss: {
       description: 'TrustOSS Spec Version', // Prompt displayed to the user. If not supplied name will be used.

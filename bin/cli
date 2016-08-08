@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
 // Program bootstrap
-var opts = {
+const opts = {
   lib: {
     colors: require('colors'),
-    commander: require('commander'),
+    nopt: require('nopt'),
+    stream: require('stream'),
     prompt: require('prompt'),
     fs: require('fs'),
     path: require('path'),
@@ -20,68 +21,146 @@ var opts = {
     danger: '[TrustOSS | ERROR]'.red
   }
 }
-var lib = opts.lib
-var helpers = opts.helpers
+const lib = opts.lib
+const helpers = opts.helpers
 
-var program = lib.commander
-var prompt = lib.prompt
-var fs = lib.fs
-var path = lib.path
-var pkg = opts.pkg
-var trustOSS = lib.trustOSS
+// const program = lib.commander
+const prompt = lib.prompt
+const fs = lib.fs
+const path = lib.path
+const pkg = opts.pkg
+const trustOSS = lib.trustOSS
 
-var log = helpers.log
+const log = helpers.log
 const info = helpers.info
 const warn = helpers.warn
 const danger = helpers.danger
 
-var subcommand
+let subcommand
 
-var defaults = helpers.defaults({}, opts)
+const defaults = helpers.defaults({}, opts)
 
-var prompts = {
+const prompts = {
   init: require('./prompt-1')({defaults: defaults}, opts)
 }
 
-var bootstrap = require('./bootstrap')
-var lint = require('./lint')
+const bootstrap = require('./bootstrap')
+const lint = require('./lint')
 
 prompt.message = info
 prompt.delimiter = ': '
 
-program
-  .version(pkg.version)
-  .usage('[init] [options]')
-  .option('-d, --default', 'Use default configuration')
-  .option('-b, --base [path]', 'Base documentation path [./docs]', './docs')
-  .option('-y', 'Accept default configuration')
-  .option('-c, --config [path]', 'Import TrustOSS configuration')
-  .option('-o', 'Overwrite existing files (not recommended)')
-  .option('-v, --verbose', 'Verbose')
-  .arguments('<subcmd>')
-  .action(function (subcmd) {
-    subcommand = subcmd
-  })
-  .parse(process.argv)
-
-if (program.verbose) {
-  process.env.VERBOSE = true
+var nopt = opts.lib.nopt
+var Stream = opts.lib.stream.Stream
+var knownOpts = {
+  // 'foo': [String, null],
+  // 'bar': [Stream, Number],
+  'config': path,
+  'version': Boolean,
+  'verbose': Boolean,
+  'help': Boolean
+// 'bloo': [ 'big', 'medium', 'small' ],
+// 'flag': Boolean,
+// 'pick': Boolean,
+// 'many1': [String, Array],
+// 'many2': [path]
 }
+var shortHands = {
+  'c': ['--config'],
+  'v': ['--verbose'],
+  'V': ['--version'],
+  'h': ['--help'],
+// 'b7': ['--bar', '7'],
+// 'm': ['--bloo', 'medium'],
+// 'p': ['--pick'],
+// 'f': ['--flag']
+}
+// everything is optional.
+// knownOpts and shorthands default to {}
+// arg list defaults to process.argv
+// slice defaults to 2
+var parsed = nopt(knownOpts, shortHands, process.argv, 2)
+console.log(parsed)
+
+if (parsed.help) {
+  console.log(`
+${helpers.info} cli v${pkg.version}
+
+Usage: trustoss [init] [options]
+
+Options:
+
+  -h, --help           output usage information
+  -V, --version        output the version number
+  -d, --default        Use default configuration
+  -b, --base [path]    Base documentation path [./docs]
+  -y                   Accept default configuration
+  -c, --config [path]  TrustOSS configuration [.trustoss]
+  -o                   Overwrite existing files (not recommended)
+  -v, --verbose        Verbose`
+  )
+  process.exit(0)
+}
+
+if (parsed.version) {
+  console.log(`
+${helpers.info} cli v${pkg.version}
+`)
+}
+
+// program.version(pkg.version)
+// // program.usage('[init] [options]')
+// // program.option('-d, --default', 'Use default configuration')
+// // program.option('-b, --base [path]', 'Base documentation path [./docs]', './docs')
+// // program.option('-y', 'Accept default configuration')
+// // program.option('-c, --config [path]', 'TrustOSS configuration [.trustoss]', '.trustoss')
+// // program.option('-o', 'Overwrite existing files (not recommended)')
+// // program.option('-v, --verbose', 'Verbose')
+// // program.arguments('<subcmd>')
+// // program.action(function (subcmd) {
+// //   subcommand = subcmd
+// // })
+// console.log(program)
+// program.on('--help', function () {
+//   console.log(`
+// ${helpers.info} cli v ${pkg.version}
+
+// Usage: trustoss [init] [options]
+
+// Options:
+
+//   -h, --help           output usage information
+//   -V, --version        output the version number
+//   -d, --default        Use default configuration
+//   -b, --base [path]    Base documentation path [./docs]
+//   -y                   Accept default configuration
+//   -c, --config [path]  TrustOSS configuration [.trustoss]
+//   -o                   Overwrite existing files (not recommended)
+//   -v, --verbose        Verbose`
+//   )
+// })
+// program.parse(process.argv)
+
+// if (program.verbose) {
+//   process.env.VERBOSE = true
+// }
 
 log(info, 'cli v' + pkg.version)
-console.log(program)
+// console.log(program)
 
-if (subcommand) {
-  if (subcommand === 'init') {
-    bootstrap({
-      prompts: prompts
-    }, opts)
-  } else {
-    log(danger, 'Unrecognized subcommand,', subcommand.yellow)
-    program.outputHelp(function (txt) {
-      return txt.red
-    })
-  }
-} else {
-  lint({}, opts)
-}
+console.log('this is being run')
+
+// if (subcommand) {
+//   if (subcommand === 'init') {
+//     bootstrap({
+//       prompts: prompts
+//     }, opts)
+//   } else {
+//     log(danger, 'Unrecognized subcommand,', subcommand.yellow)
+//     program.outputHelp(function (txt) {
+//       return txt.red
+//     })
+//   }
+// } else {
+//   lint({}, opts)
+// }
