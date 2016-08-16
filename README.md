@@ -11,6 +11,14 @@
 
 ##### Linter
 
+Types:
+
+- [ ] Local file system lint
+- [ ] Remote Github repo lint (via API)
+  - Look into Gitlab API integration
+
+Steps:
+
 - [ ] if no .trustoss, look for common files
 - [ ] if .trustoss, look for doc locations
 - [ ] scan tags, look for last tag + compare with last edit to changelog
