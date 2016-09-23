@@ -15,7 +15,7 @@ const README = {
   ],
   purpose: '"Landing page" of the repository, the first place new developers will look for information about the project, installation guide (or link to them), usage, troubleshooting, etc.',
   versioncheck: 'minor',
-  templates: requireDir('../../templates/README'),
+  templates: requireDir('../../templates/readme'),
   defaults: {
     type: 'TrustOSS v0.1',
     location: '../'
