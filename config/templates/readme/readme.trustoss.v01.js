@@ -9,7 +9,7 @@ module.exports = function readmeTrustOSSv01 (opts) {
   */
   return `# ${opts.name}
 
-[![](https://img.shields.io/badge/Trust-OSS-green.svg)](http://trustoss.org)
+[![TrustOSS Compliant](http://trustoss.org/badge_version.svg)](http://trustoss.org)
 [![Build Status Badge - Use something like TravisCI](https://img.shields.io/badge/build-status-brightgreen.svg)](http://about.travis-ci.org/docs/user/getting-started/)
 
 Brief explanation of the project.
@@ -61,7 +61,7 @@ This section is a work in progress. FAQs will be posted here as they are raised.
 
 ### Team
 
-List of core team members here (optional) 
+List of core team members here (optional)
 
 ### Contact
 
