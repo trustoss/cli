@@ -1,50 +1,159 @@
 #!/usr/bin/env node
 
-// Set up default messages
-require('colors')
-
-const info = '[TrustOSS]'.green
-const warn = '[TrustOSS | WARNING]'.yellow
-const danger = '[TrustOSS | ERROR]'.red
-
 // Program bootstrap
-var program = require('commander')
-var prompt = require('prompt')
-var fs = require('fs')
-var path = require('path')
+const opts = {
+  lib: {
+    colors: require('colors'),
+    nopt: require('nopt'),
+    stream: require('stream'),
+    prompt: require('prompt'),
+    fs: require('fs'),
+    path: require('path'),
+    trustOSS: require('../lib/trustoss')
+  },
+  pkg: require('../package.json'),
+  helpers: {
+    log: require('../helpers/log'),
+    getGitRepo: require('../helpers/getGitRepo'),
+    defaults: require('../helpers/defaults'),
+    info: '[TrustOSS]'.green,
+    warn: '[TrustOSS | WARNING]'.yellow,
+    danger: '[TrustOSS | ERROR]'.red
+  }
+}
+const lib = opts.lib
+const helpers = opts.helpers
+
+// const program = lib.commander
+const prompt = lib.prompt
+const fs = lib.fs
+const path = lib.path
+const pkg = opts.pkg
+const trustOSS = lib.trustOSS
+
+const log = helpers.log
+const info = helpers.info
+const warn = helpers.warn
+const danger = helpers.danger
+
+const defaults = helpers.defaults({}, opts)
+
+const prompts = {
+  init: require('./prompt-1')({defaults: defaults}, opts)
+}
+
+const bootstrap = require('./bootstrap')
+const lint = require('./lint')
+
 prompt.message = info
 prompt.delimiter = ': '
-var pkg = require('../package.json')
-var trustOSS = require('../lib/trustoss')
 
-var subcommand
-var opts = {}
+const nopt = opts.lib.nopt
+const Stream = opts.lib.stream.Stream
+const knownOpts = {
+  // 'foo': [String, null],
+  // 'bar': [Stream, Number],
+  'config': path,
+  'version': Boolean,
+  'verbose': Boolean,
+  'help': Boolean
+// 'bloo': [ 'big', 'medium', 'small' ],
+// 'flag': Boolean,
+// 'pick': Boolean,
+// 'many1': [String, Array],
+// 'many2': [path]
+}
+const shortHands = {
+  'c': ['--config'],
+  'v': ['--verbose'],
+  'V': ['--version'],
+  'h': ['--help'],
+// 'b7': ['--bar', '7'],
+// 'm': ['--bloo', 'medium'],
+// 'p': ['--pick'],
+// 'f': ['--flag']
+}
+// everything is optional.
+// knownOpts and shorthands default to {}
+// arg list defaults to process.argv
+// slice defaults to 2
+const parsed = nopt(knownOpts, shortHands, process.argv, 2)
+console.log(parsed)
 
-var log = require('../helpers/log')
+if (parsed.help) {
+  console.log(`
+${helpers.info} cli v${pkg.version}
 
-program
-  .version(pkg.version)
-  .usage('[init] [options]')
-  .option('-d, --default', 'Use default configuration')
-  .option('-b, --base [path]', 'Base documentation path [./docs]', './docs')
-  .option('-y', 'Accept default configuration')
-  .option('-c, --config [path]', 'Import TrustOSS configuration')
-  .option('-v, --verbose', 'Verbose')
-  .arguments('<subcmd>')
-  .action(function (subcmd) {
-    subcommand = subcmd
-  })
-  .parse(process.argv)
+Usage: trustoss [init] [options]
 
-if (program.verbose) {
+Options:
+
+  -h, --help           output usage information
+  -V, --version        output the version number
+  -d, --default        Use default configuration
+  -b, --base [path]    Base documentation path [./docs]
+  -y                   Accept default configuration
+  -c, --config [path]  TrustOSS configuration [.trustoss]
+  -o                   Overwrite existing files (not recommended)
+  -v, --verbose        Verbose`
+  )
+  process.exit(0)
+}
+
+if (parsed.version) {
+  console.log(`
+${helpers.info} cli v${pkg.version}
+`)
+}
+
+// program.version(pkg.version)
+// // program.usage('[init] [options]')
+// // program.option('-d, --default', 'Use default configuration')
+// // program.option('-b, --base [path]', 'Base documentation path [./docs]', './docs')
+// // program.option('-y', 'Accept default configuration')
+// // program.option('-c, --config [path]', 'TrustOSS configuration [.trustoss]', '.trustoss')
+// // program.option('-o', 'Overwrite existing files (not recommended)')
+// // program.option('-v, --verbose', 'Verbose')
+// // program.arguments('<subcmd>')
+// // program.action(function (subcmd) {
+// //   subcommand = subcmd
+// // })
+// console.log(program)
+// program.on('--help', function () {
+//   console.log(`
+// ${helpers.info} cli v ${pkg.version}
+
+// Usage: trustoss [init] [options]
+
+// Options:
+
+//   -h, --help           output usage information
+//   -V, --version        output the version number
+//   -d, --default        Use default configuration
+//   -b, --base [path]    Base documentation path [./docs]
+//   -y                   Accept default configuration
+//   -c, --config [path]  TrustOSS configuration [.trustoss]
+//   -o                   Overwrite existing files (not recommended)
+//   -v, --verbose        Verbose`
+//   )
+// })
+// program.parse(process.argv)
+
+if (parsed.verbose) {
   process.env.VERBOSE = true
 }
 
 log(info, 'cli v' + pkg.version)
+// console.log(program)
 
+console.log('this is being run')
+
+const subcommand = parsed.argv.remain[0]
 if (subcommand) {
   if (subcommand === 'init') {
-    bootstrapEssentialFiles()
+    bootstrap({
+      prompts: prompts
+    }, opts)
   } else {
     log(danger, 'Unrecognized subcommand,', subcommand.yellow)
     program.outputHelp(function (txt) {
@@ -52,179 +161,5 @@ if (subcommand) {
     })
   }
 } else {
-  triggerLint()
-}
-
-function bootstrapEssentialFiles () {
-  log(info, 'Bootstrapping TrustOSS essential files.')
-  // Interactive questions
-  var cwd = process.cwd()
-  var folder = cwd.split('/')
-  folder = folder[folder.length - 1]
-  prompt.start()
-
-  var promptQs = {
-    properties:{
-      trustoss: {
-        description: 'TrustOSS Spec Version', // Prompt displayed to the user. If not supplied name will be used.
-        type: 'string', // Specify the type of input to expect.
-        default: '0.1.0', // Default value to use if no value is entered.
-        required: true                        // If true, value entered must be non-empty.
-      },
-      name: {
-        description: 'Project Name', // Prompt displayed to the user. If not supplied name will be used.
-        type: 'string', // Specify the type of input to expect.
-        default: folder, // Default value to use if no value is entered.
-        required: true                        // If true, value entered must be non-empty.
-      },
-      repository: {
-        description: 'Project Repository', // Prompt displayed to the user. If not supplied name will be used.
-        type: 'string', // Specify the type of input to expect.
-        default: getGitRepo() // Default value to use if no value is entered.
-      // required: true                        // If true, value entered must be non-empty.
-      },
-      status: {
-        description: 'Project Status',
-        type: 'string',
-        default: 'beta',
-        require: true
-      },
-      contact: {
-        description: 'Main Contact (Team Lead)',
-        type: 'string'
-      },
-      homepage: {
-        description: 'Homepage',
-        type: 'string'
-      },
-      docroot: {
-        description: 'Root for Project Documents',
-        type: 'string',
-        default: 'docs/',
-        require: true
-      },
-      readme: {
-        description: 'Readme Type',
-        type:'string',
-        default: 'TrustOSS v0.1',
-        require: true
-      },
-      contributing: {
-        description: 'Contributing Guide Type',
-        type:'string',
-        default: 'TrustOSS v0.1',
-        require: true
-      },
-      license: {
-        description: 'License Type',
-        type:'string',
-        default: 'MIT',
-        require: true // https://tldrlegal.com/license/mit-license
-      },
-      changelog: {
-        description: 'Changelog Type',
-        type: 'string',
-        default: 'keepachangelog',
-        require: true
-      },
-      coc: {
-        description: 'Code of Conduct Type',
-        type: 'string',
-        default: 'Contributor Covenant',
-        require: true
-      },
-      assets: {
-        description: 'Include assets/ ?',
-        type: 'string',
-        default: 'Y/n',
-        require: true
-      },
-      governance: {
-        description: 'Include .governance/ ?',
-        type: 'string',
-        default: 'Y/n',
-        require: true
-      }
-    }
-  }
-
-  prompt.get(promptQs, function (err, data) {
-    if (err) throw err
-    data.assets = data.assets.toLowerCase()
-    data.assets = data.assets === 'y/n' ? 'yes' : data.assets
-    data.assets = data.assets === 'y' ? 'yes' : data.assets
-    data.assets = data.assets === 'n' ? 'no' : data.assets
-    data.governance = data.governance.toLowerCase()
-    data.governance = data.governance === 'y/n' ? 'yes' : data.governance
-    data.governance = data.governance === 'y' ? 'yes' : data.governance
-    data.governance = data.governance === 'n' ? 'no' : data.governance
-    console.log(JSON.stringify(data, null, ' '))
-    // build opts
-    prompt.start()
-    prompt.get([{properties:{
-      verify:{
-        description: 'Here\'s your configuration. Does this look right?',
-        type: 'string',
-        default: 'Y/n',
-        required:true
-    }}}], function(err, choice){
-      if(err) throw data
-      choice.verify = choice.verify.toLowerCase()
-      choice.verify = choice.verify === 'y/n' ? 'yes' : choice.verify
-      choice.verify = choice.verify === 'y' ? 'yes' : choice.verify
-      choice.verify = choice.verify === 'n' ? 'no' : choice.verify
-      if(choice.verify === 'yes'){
-        if(data.assets === 'yes'){
-          data.assets = './.assets'
-        } else {
-          delete data.assets
-        }
-        if(data.governance === 'yes'){
-          data.governance = './.governance'
-        } else {
-          delete data.governance
-        }
-        data.readme_location = 'README.md'
-        data.contributing_location = 'CONTRIBUTING.md'
-        data.license_location = 'LICENSE.md'
-        data.changelog_location = 'CHANGELOG.md'
-        data.coc_location = 'CODEOFCONDUCT.md'
-        data.readme_location = 'README.md'
-        trustOSS.init(data)
-      }
-    })
-    // then pass in opts
-  })
-}
-function triggerLint () {
-  log(info, 'Linting for TrustOSS documents.')
-  // build opts
-
-  // then pass in opts
-  trustOSS.lint(opts)
-}
-
-function getGitRepo () {
-  var gitConfigPath = [
-    process.cwd(),
-    '.git/config'
-  ].join('/')
-  var gconf = fs.readFileSync(gitConfigPath, 'utf8')
-   // function (er, gconf) {
-   //  if (er || !gconf) {
-   //    return cb()
-   //  }
-    gconf = gconf.split(/\r?\n/)
-    var i = gconf.indexOf('[remote "origin"]')
-    if (i !== -1) {
-      var url = gconf[i + 1]
-      if (!url.match(/^\s*url =/)) u = gconf[i + 2]
-      if (!url.match(/^\s*url =/)) u = null
-      else url = url.replace(/^\s*url = /, '')
-    }
-    if (url && url.match(/^git@github.com:/))
-      url = url.replace(/^git@github.com:/, 'https://github.com/')
-
-    return url
-  // })
+  lint({}, opts)
 }

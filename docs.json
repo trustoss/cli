@@ -1,0 +1,19 @@
+{
+ "trustoss": "0.1.2",
+ "name": "TrustOSS cli",
+ "repository": "ssh://git@github.com/trustoss/cli.git",
+ "status": "discovery",
+ "contact": "Ozzy Haven (@therebelrobot) <github@therebelrobot.com>",
+ "homepage": "http://trustoss.org",
+ "docroot": "docs/",
+ "readme": "TrustOSS v0.1",
+ "contributing": "Contribute.md",
+ "license": "MIT",
+ "changelog": "keepachangelog",
+ "coc": "Contributor Covenant",
+ "readme_location": "../README.md",
+ "contributing_location": "CONTRIBUTING.md",
+ "license_location": "LICENSE.md",
+ "changelog_location": "CHANGELOG.md",
+ "coc_location": "CODEOFCONDUCT.md"
+}
