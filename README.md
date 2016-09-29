@@ -3,44 +3,41 @@
 [![TrustOSS Compliant](http://trustoss.org/badge_version.svg)](http://trustoss.org)
 [![Build Status Badge - Use something like TravisCI](https://img.shields.io/badge/build-status-brightgreen.svg)](http://about.travis-ci.org/docs/user/getting-started/)
 
-Brief explanation of the project.
+Command line utility to scaffold / lint TrustOSS essential files. Built in Node.js.
 
 ### Table of Contents
 
 - [Installation](#installation)
-  - [Basic Usage Install](#basic-usage-install)
-  - [Production Deployment](#production-deployment)
-  - [Development Install](#development-install)
 - [Usage / API](#usage--api)
 - [Troubleshooting](#troubleshooting)
 - [FAQs](#faqs)
 - [Team](#team)
 - [Contact](#contact)
 - [Additional Resources](#additional-resources)
-  - [Project Changelog](/CHANGELOG.md)
-  - [Contributing Guide](/CONTRIBUTING.md)
-  - [Code of Conduct](/CODEOFCONDUCT.md)
-  - [Project License](/LICENSE.md)
+  - [Project Changelog](/docs/CHANGELOG.md)
+  - [Contributing Guide](/docs/CONTRIBUTING.md)
+  - [Code of Conduct](/docs/CODEOFCONDUCT.md)
+  - [Project License](/docs/LICENSE.md)
 
 ### Installation
 
-Installation details should include local installation steps, and steps to deploy for end users (if applicable)
-
-#### Basic Usage Install
-
-This is what the average visitor would need to do to install your application.
-
-#### Production Deployment
-
-This is what a project implementor or partner (read: devops) would need to do to deploy your application in production (if applicable).
-
-#### Development Install
-
-This is what a project contributor would need to do to install your application locally.
+```
+npm install -g trustoss
+```
 
 ### Usage / API
 
-This should outline the basic and advanced usage of your application, and a complete API reference (if applicable)
+##### Linter
+
+```
+trustoss
+```
+
+##### Essential File Bootstrapper
+
+```
+trustoss init
+```
 
 ### Troubleshooting
 
@@ -52,17 +49,17 @@ This section is a work in progress. FAQs will be posted here as they are raised.
 
 ### Team
 
-List of core team members here (optional)
+- Ozzy Haven (@therebelrobot) <github@therebelrobot.com>
 
 ### Contact
 
 The main method to contact the project lead, whether by email, Slack, IRC, carrier pidgeon or smoke signal.
 
-Feel free to chat with the __PROJECT__ core team (and many other users) on IRC in the  [#project](irc://irc.freenode.net/project) channel on Freenode, or via email on the [Project mailing list]().
+Feel free to chat with the TrustOSS core team (and many other users) on the [sfbrigade slack team](http://c4sf.me/slack) in the [#trustoss](https://sfbrigade.slack.com/messages/trustoss) channel.
 
 ### Additional Resources
 
-- [Project Changelog](CHANGELOG.md)
-- [Contributing Guide]({opts.contributingLocation})
-- [Code of Conduct]({opts.cocLocation})
-- [Project License]({opts.licenseLocation})
+- [Project Changelog](/docs/CHANGELOG.md)
+- [Contributing Guide](/docs/CONTRIBUTING.md)
+- [Code of Conduct](/docs/CODEOFCONDUCT.md)
+- [Project License](/docs/LICENSE.md)
