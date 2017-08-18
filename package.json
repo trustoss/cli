@@ -1,59 +1,49 @@
 {
-  "name": "trustoss",
-  "version": "0.0.1",
-  "description": "Scaffold / Lint essential files for compliance with TrustOSS specification. http://trustoss.org",
+  "name": "@trustoss/cli",
+  "version": "1.0.0-rc1",
+  "description": "Open source documentation lint and scaffold",
   "main": "lib/trustoss.js",
   "bin": {
-    "trustoss": "bin/cli"
+    "docs": "./bin/trustoss"
   },
   "scripts": {
-    "pretest": "standard",
-    "test": "tap ./*.tap.js"
+    "test": "ava"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/trustoss/trustoss-cli.git"
+    "url": "git+ssh://git@github.com/trustoss/cli.git"
   },
   "keywords": [
-    "trust",
-    "spec",
-    "trustoss",
-    "specification",
     "docs",
-    "doc",
+    "documentation",
     "documentation",
     "readme",
-    "changelog",
-    "contributing",
-    "code",
-    "of",
-    "conduct",
-    "c4sf",
-    "cfsf",
-    "code",
-    "for",
-    "san",
-    "francisco"
+    "README",
+    "coc",
+    "contributor",
+    "contributors",
+    "guid",
+    "overview",
+    "tutorial",
+    "scaffold",
+    "lint",
+    "parse",
+    "trust",
+    "accessibility",
+    "a11y"
   ],
-  "author": "Trent Oswald <trentoswald@therebelrobot.com> (@therebelrobot)",
-  "license": "ISC",
+  "author": "Ozzy Haven <npm@therebelrobot.com> (@therebelrobot)",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/trustoss/trustoss-cli/issues"
+    "url": "https://github.com/trustoss/cli/issues"
   },
-  "homepage": "https://github.com/trustoss/trustoss-cli#readme",
-  "dependencies": {
-    "breeze": "^1.2.2",
-    "colors": "^1.1.2",
-    "mksubdir": "^0.1.0",
-    "moment": "^2.13.0",
-    "nopt": "^3.0.6",
-    "prompt": "^1.0.0",
-    "require-dir": "^0.3.0",
-    "require-directory": "^2.1.1",
-    "stream": "0.0.2"
-  },
+  "homepage": "https://github.com/trustoss/cli#readme",
   "devDependencies": {
-    "standard": "^7.1.2",
-    "tap": "^5.7.3"
+    "assert": "^1.4.1",
+    "ava": "^0.21.0",
+    "mock-require": "^2.0.2"
+  },
+  "dependencies": {
+    "cosmiconfig": "^2.2.2"
   }
 }
