@@ -1,0 +1,10 @@
+#! /usr/bin/env node
+const cosmiconfig = require('cosmiconfig');
+const explorer = cosmiconfig('docs', {
+  rcExtensions: true
+});
+
+const config = explorer.load().then((results) => {
+  console.log(results)
+})
+console.log(config)
